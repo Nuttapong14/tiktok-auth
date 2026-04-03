@@ -6,7 +6,7 @@ A lightweight TikTok OAuth 2.0 authentication integration that lets users sign i
 
 **tiktok-auth** handles the TikTok OAuth flow — redirecting users to TikTok's authorization page, receiving the callback, and exchanging the code for an access token. It is hosted as a static site on GitHub Pages.
 
-**Live site:** https://nuttapong14.github.io/tiktok-auth
+**Live site:** https://nuttapong14.github.io/enb-shop
 
 ## Features
 
