@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post to TikTok — E&amp;B Shop</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #fe2c55;
+      --cyan: #25f4ee;
+      --gold: #f5a623;
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface2: #161616;
+      --border: #1e1e1e;
+      --text: #e2e2e2;
+      --muted: #888;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.5px; color: #fff; }
+    .logo .e { color: var(--red); }
+    .logo .b { color: var(--cyan); }
+
+    .nav-back {
+      font-size: 0.875rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.15s;
+    }
+    .nav-back:hover { color: #fff; }
+
+    /* ── PAGE LAYOUT ── */
+    .page-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+      width: 100%;
+      flex: 1;
+    }
+
+    .page-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.3rem;
+    }
+
+    .page-sub {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── STEP CARD ── */
+    .step-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--red);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-title { font-size: 1rem; font-weight: 700; color: #fff; }
+    .step-subtitle { font-size: 0.8rem; color: var(--muted); margin-top: 0.15rem; }
+
+    /* ── CREATOR INFO (Point 1) ── */
+    .creator-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+    }
+
+    .creator-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--red), var(--cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .creator-info h3 { font-size: 1rem; font-weight: 700; color: #fff; }
+    .creator-info p { font-size: 0.8rem; color: var(--muted); margin-top: 0.15rem; }
+
+    .creator-status {
+      margin-left: auto;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #22c55e;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 999px;
+      padding: 0.25rem 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .creator-note {
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── CONTENT PREVIEW (Point 5) ── */
+    .preview-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .preview-media {
+      aspect-ratio: 9/16;
+      max-height: 260px;
+      background: linear-gradient(135deg, #0d1a2e 0%, #1f0a12 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      color: var(--muted);
+    }
+
+    .preview-media .media-icon { font-size: 3rem; }
+    .preview-media p { font-size: 0.85rem; }
+
+    .preview-label {
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .preview-label .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      flex-shrink: 0;
+    }
+
+    /* ── FORM FIELDS (Point 2) ── */
+    .field-group { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .field-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
+
+    .field-required { color: var(--red); margin-left: 0.2rem; }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 0.75rem 1rem;
+      transition: border-color 0.15s;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    select:focus { border-color: var(--red); }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+      cursor: pointer;
+    }
+
+    .char-count {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: right;
+      margin-top: 0.35rem;
+    }
+
+    /* ── TOGGLE ROW ── */
+    .toggle-list { display: flex; flex-direction: column; gap: 0; }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-row.disabled { opacity: 0.4; pointer-events: none; }
+
+    .toggle-info h4 { font-size: 0.9rem; font-weight: 600; color: #fff; }
+    .toggle-info p { font-size: 0.78rem; color: var(--muted); margin-top: 0.15rem; }
+
+    .toggle-switch { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: #2a2a2a;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toggle-track::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #666;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .toggle-switch input:checked + .toggle-track { background: var(--red); }
+    .toggle-switch input:checked + .toggle-track::after {
+      transform: translateX(18px);
+      background: #fff;
+    }
+
+    /* ── LEGAL NOTICE (Point 2) ── */
+    .legal-notice {
+      margin-top: 1.25rem;
+      padding: 1rem;
+      background: rgba(254,44,85,0.06);
+      border: 1px solid rgba(254,44,85,0.15);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .legal-notice a { color: var(--red); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ── COMMERCIAL DISCLOSURE (Point 3) ── */
+    .disclosure-toggle-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .disclosure-toggle-info h4 { font-size: 0.95rem; font-weight: 700; color: #fff; }
+    .disclosure-toggle-info p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+      line-height: 1.5;
+    }
+
+    .disclosure-options { display: none; flex-direction: column; gap: 0.75rem; }
+    .disclosure-options.visible { display: flex; }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .checkbox-row:hover { border-color: #333; }
+    .checkbox-row.selected { border-color: var(--red); background: rgba(254,44,85,0.05); }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--red);
+      flex-shrink: 0;
+      margin-top: 1px;
+      cursor: pointer;
+    }
+
+    .checkbox-info h5 { font-size: 0.9rem; font-weight: 600; color: #fff; }
+    .checkbox-info p { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; line-height: 1.5; }
+
+    .disclosure-warning {
+      display: none;
+      padding: 0.75rem 1rem;
+      background: rgba(245,166,35,0.08);
+      border: 1px solid rgba(245,166,35,0.2);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: var(--gold);
+      line-height: 1.5;
+    }
+
+    .disclosure-warning.visible { display: block; }
+
+    /* ── COMPLIANCE (Point 4) ── */
+    .compliance-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .compliance-item {
+      display: none;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.9rem 1rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .compliance-item.visible { display: flex; }
+    .compliance-item .ci-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .compliance-item a { color: var(--cyan); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ── CONSENT & SUBMIT (Point 5) ── */
+    .consent-block {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 1.25rem;
+      cursor: pointer;
+    }
+
+    .consent-block input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--red);
+      flex-shrink: 0;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    .consent-block p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+    .consent-block a { color: var(--cyan); text-underline-offset: 2px; text-decoration: underline; }
+
+    .processing-note {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: rgba(37,244,238,0.05);
+      border: 1px solid rgba(37,244,238,0.15);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: var(--cyan);
+      margin-bottom: 1.5rem;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 0.9rem;
+      border-radius: 8px;
+      background: var(--red);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .submit-btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+
+    .submit-btn:disabled {
+      background: #2a2a2a;
+      color: #555;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .tiktok-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #fff;
+      background: #000;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 0.3rem 0.6rem;
+      margin-bottom: 1.25rem;
+    }
+
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      text-align: center;
+      font-size: 0.78rem;
+      color: #444;
+    }
+
+    @media (max-width: 600px) {
+      .page-wrap { padding: 1.5rem 1rem 3rem; }
+      nav { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="logo"><span class="e">E</span>&amp;<span class="b">B</span> Shop</a>
+    <a href="index.html" class="nav-back">&#8592; Back to Shop</a>
+  </nav>
+
+  <div class="page-wrap">
+
+    <h1 class="page-title">&#x1F3B5; Post to TikTok</h1>
+    <p class="page-sub">Share your E&amp;B Shop haul directly to your TikTok account.</p>
+
+    <div class="tiktok-badge">&#9654; TikTok Content Posting API</div>
+
+    <!-- ══════════════════════════════════════════
+         POINT 1: CREATOR INFO
+    ══════════════════════════════════════════ -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Creator Account</div>
+          <div class="step-subtitle">Verify your connected TikTok account</div>
+        </div>
+      </div>
+
+      <div class="creator-row">
+        <div class="creator-avatar">&#x1F464;</div>
+        <div class="creator-info">
+          <h3 id="creator-nickname">@your_tiktok_handle</h3>
+          <p id="creator-meta">Connected TikTok Creator &middot; Max video: 60s</p>
+        </div>
+        <span class="creator-status">&#x2714; Eligible to post</span>
+      </div>
+
+      <p class="creator-note">
+        Posting eligibility and video duration limits are determined by your TikTok creator settings.
+        If you are unable to post, please check your TikTok account status and try again.
+      </p>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         POINT 5 (preview first): CONTENT PREVIEW
+    ══════════════════════════════════════════ -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Content Preview</div>
+          <div class="step-subtitle">Review your content before setting post details</div>
+        </div>
+      </div>
+
+      <div class="preview-box">
+        <div class="preview-media">
+          <div class="media-icon">&#x1F4F9;</div>
+          <p>Your selected video or photo will appear here</p>
+        </div>
+        <div class="preview-label">
+          <span class="dot"></span>
+          Preview is shown as-is. No promotional watermarks or overlays will be added.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         POINT 2: REQUIRED METADATA FIELDS
+    ══════════════════════════════════════════ -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">Post Details</div>
+          <div class="step-subtitle">Title, privacy, and interaction settings</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+
+        <!-- Title -->
+        <div>
+          <label class="field-label" for="post-title">
+            Title <span class="field-required">*</span>
+          </label>
+          <input
+            type="text"
+            id="post-title"
+            maxlength="150"
+            placeholder="Write a caption for your TikTok post&hellip;"
+            oninput="updateCharCount(this)"
+          />
+          <div class="char-count"><span id="title-count">0</span> / 150</div>
+        </div>
+
+        <!-- Privacy Status — no default, per Point 2 -->
+        <div>
+          <label class="field-label" for="privacy-status">
+            Who can view this post <span class="field-required">*</span>
+          </label>
+          <select id="privacy-status" onchange="handlePrivacyChange()">
+            <option value="" disabled selected>Select privacy setting&hellip;</option>
+            <option value="PUBLIC_TO_EVERYONE">Everyone</option>
+            <option value="MUTUAL_FOLLOW_FRIENDS">Friends</option>
+            <option value="FOLLOWER_OF_CREATOR">Followers</option>
+            <option value="SELF_ONLY" id="privacy-only-me">Only Me</option>
+          </select>
+        </div>
+
+        <!-- Interaction toggles — all unchecked by default, per Point 2 -->
+        <div>
+          <div class="field-label">Allow Interactions</div>
+          <div class="toggle-list">
+
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <h4>Allow Comment</h4>
+                <p>Let viewers comment on this post</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="allow-comment" />
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+
+            <div class="toggle-row" id="toggle-row-duet">
+              <div class="toggle-info">
+                <h4>Allow Duet</h4>
+                <p>Let others create a Duet with this video</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="allow-duet" />
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+
+            <div class="toggle-row" id="toggle-row-stitch">
+              <div class="toggle-info">
+                <h4>Allow Stitch</h4>
+                <p>Let others use this video in their Stitch</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="allow-stitch" />
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Point 2: Music Usage legal declaration (always visible) -->
+      <div class="legal-notice">
+        By posting, you agree to TikTok's
+        <a href="https://www.tiktok.com/legal/music-usage-confirmation" target="_blank" rel="noopener noreferrer">
+          Music Usage Confirmation
+        </a>.
+        Ensure you have the necessary rights to any music included in your content.
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         POINT 3: COMMERCIAL CONTENT DISCLOSURE
+    ══════════════════════════════════════════ -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-num">4</div>
+        <div>
+          <div class="step-title">Disclose Commercial Content</div>
+          <div class="step-subtitle">Required by TikTok for promotional or sponsored content</div>
+        </div>
+      </div>
+
+      <!-- Toggle off by default, per Point 3 -->
+      <div class="disclosure-toggle-row">
+        <div class="disclosure-toggle-info">
+          <h4>Content Promotion Disclosure</h4>
+          <p>
+            Turn this on if this post promotes a product, service, or brand — including your own.
+            TikTok requires creators to label commercial content.
+          </p>
+        </div>
+        <label class="toggle-switch" style="margin-top:0.25rem; flex-shrink:0">
+          <input type="checkbox" id="disclosure-toggle" onchange="handleDisclosureToggle()" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+
+      <!-- Cascading options, hidden until toggle is on -->
+      <div class="disclosure-options" id="disclosure-options">
+
+        <label class="checkbox-row" id="cb-row-brand">
+          <input type="checkbox" id="cb-your-brand" onchange="handleDisclosureChange()" />
+          <div class="checkbox-info">
+            <h5>Your Brand</h5>
+            <p>
+              You are promoting yourself or your own business.
+              Your content will be labeled as <strong>"Promotional content"</strong>.
+            </p>
+          </div>
+        </label>
+
+        <label class="checkbox-row" id="cb-row-branded">
+          <input type="checkbox" id="cb-branded-content" onchange="handleDisclosureChange()" />
+          <div class="checkbox-info">
+            <h5>Branded Content</h5>
+            <p>
+              You are promoting another brand or a third party has paid or given something of value.
+              Your content will be labeled as <strong>"Paid partnership"</strong>.
+            </p>
+          </div>
+        </label>
+
+        <!-- Warning: disclosure on but nothing selected -->
+        <div class="disclosure-warning" id="disclosure-warning">
+          &#x26A0;&#xFE0F; You need to indicate if your content promotes yourself, a third party, or both.
+        </div>
+
+        <!-- Warning: Branded Content + Only Me conflict -->
+        <div class="disclosure-warning" id="branded-privacy-warning">
+          &#x26A0;&#xFE0F; Branded content visibility cannot be set to "Only Me". Please choose a different privacy setting.
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         POINT 4: COMPLIANCE DECLARATIONS
+         (shown conditionally based on disclosure)
+    ══════════════════════════════════════════ -->
+    <div class="step-card" id="compliance-card" style="display:none">
+      <div class="step-header">
+        <div class="step-num">5</div>
+        <div>
+          <div class="step-title">Policy Agreements</div>
+          <div class="step-subtitle">Required acknowledgements based on your disclosure settings</div>
+        </div>
+      </div>
+
+      <div class="compliance-list">
+
+        <!-- Shown when Your Brand is checked -->
+        <div class="compliance-item" id="ci-music">
+          <span class="ci-icon">&#x1F3B5;</span>
+          <span>
+            By posting promotional content, you confirm you agree to TikTok's
+            <a href="https://www.tiktok.com/legal/music-usage-confirmation" target="_blank" rel="noopener noreferrer">
+              Music Usage Confirmation
+            </a>
+            for all audio used in this post.
+          </span>
+        </div>
+
+        <!-- Shown when Branded Content is checked -->
+        <div class="compliance-item" id="ci-branded">
+          <span class="ci-icon">&#x1F91D;</span>
+          <span>
+            Branded content must comply with TikTok's
+            <a href="https://www.tiktok.com/legal/bc-policy" target="_blank" rel="noopener noreferrer">
+              Branded Content Policy
+            </a>.
+            Ensure the sponsoring brand has approved this content before posting.
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         POINT 5: EXPLICIT CONSENT + SUBMIT
+    ══════════════════════════════════════════ -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-num" id="consent-step-num">5</div>
+        <div>
+          <div class="step-title">Review &amp; Post</div>
+          <div class="step-subtitle">Confirm your consent before sending to TikTok</div>
+        </div>
+      </div>
+
+      <label class="consent-block">
+        <input type="checkbox" id="consent-check" onchange="updateSubmitState()" />
+        <p>
+          I confirm I have reviewed the content preview above and I give my explicit consent to post
+          this content to TikTok through E&amp;B Shop. I understand this will publish to my TikTok account.
+          I agree to TikTok's
+          <a href="https://www.tiktok.com/legal/terms-of-service" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
+            Terms of Service
+          </a>
+          and
+          <a href="privacy.html" target="_blank" onclick="event.stopPropagation()">
+            E&amp;B Shop Privacy Policy
+          </a>.
+        </p>
+      </label>
+
+      <!-- Point 5: Processing notification -->
+      <div class="processing-note">
+        &#x23F3; After posting, your content may take a few minutes to process and appear on TikTok.
+        You will be notified once it is live.
+      </div>
+
+      <button class="submit-btn" id="submit-btn" type="button" disabled onclick="handleSubmit()">
+        <span>&#x1F3B5;</span>
+        <span id="submit-label">Post to TikTok</span>
+      </button>
+
+    </div>
+
+  </div><!-- /page-wrap -->
+
+  <footer>
+    &copy; 2026 E&amp;B Shop &nbsp;&middot;&nbsp;
+    <a href="privacy.html" style="color:#555">Privacy Policy</a> &nbsp;&middot;&nbsp;
+    <a href="terms.html" style="color:#555">Terms &amp; Conditions</a>
+  </footer>
+
+  <script>
+    // ── Title character count
+    function updateCharCount(input) {
+      document.getElementById('title-count').textContent = String(input.value.length);
+      updateSubmitState();
+    }
+
+    // ── Point 3: Show/hide disclosure options when toggle changes
+    function handleDisclosureToggle() {
+      var on = document.getElementById('disclosure-toggle').checked;
+      var opts = document.getElementById('disclosure-options');
+      opts.classList.toggle('visible', on);
+
+      if (!on) {
+        document.getElementById('cb-your-brand').checked = false;
+        document.getElementById('cb-branded-content').checked = false;
+        document.getElementById('cb-row-brand').classList.remove('selected');
+        document.getElementById('cb-row-branded').classList.remove('selected');
+        document.getElementById('disclosure-warning').classList.remove('visible');
+        document.getElementById('branded-privacy-warning').classList.remove('visible');
+        updateComplianceSection(false, false);
+      } else {
+        handleDisclosureChange();
+      }
+      updateSubmitState();
+    }
+
+    // ── Point 3: Handle checkbox selection, cascading rules, and privacy constraints
+    function handleDisclosureChange() {
+      var disclosureOn    = document.getElementById('disclosure-toggle').checked;
+      var yourBrand       = document.getElementById('cb-your-brand').checked;
+      var brandedContent  = document.getElementById('cb-branded-content').checked;
+
+      document.getElementById('cb-row-brand').classList.toggle('selected', yourBrand);
+      document.getElementById('cb-row-branded').classList.toggle('selected', brandedContent);
+
+      // Warning when disclosure is on but nothing selected
+      document.getElementById('disclosure-warning').classList.toggle(
+        'visible',
+        disclosureOn && !yourBrand && !brandedContent
+      );
+
+      // Point 3: Disable "Only Me" option when Branded Content is selected
+      var onlyMeOpt = document.getElementById('privacy-only-me');
+      onlyMeOpt.disabled = brandedContent;
+
+      // If "Only Me" was selected and user now enables Branded Content, clear it
+      var privacySelect = document.getElementById('privacy-status');
+      var bpWarning = document.getElementById('branded-privacy-warning');
+      if (brandedContent && privacySelect.value === 'SELF_ONLY') {
+        privacySelect.value = '';
+        bpWarning.classList.add('visible');
+      } else if (!brandedContent) {
+        bpWarning.classList.remove('visible');
+      }
+
+      updateComplianceSection(yourBrand, brandedContent);
+      updateSubmitState();
+    }
+
+    // ── Point 4: Show/hide compliance items based on which disclosures are active
+    function updateComplianceSection(yourBrand, brandedContent) {
+      var card     = document.getElementById('compliance-card');
+      var ciMusic  = document.getElementById('ci-music');
+      var ciBranded = document.getElementById('ci-branded');
+      var stepNum  = document.getElementById('consent-step-num');
+
+      var showAny = yourBrand || brandedContent;
+      card.style.display = showAny ? 'block' : 'none';
+      ciMusic.classList.toggle('visible', yourBrand);
+      ciBranded.classList.toggle('visible', brandedContent);
+
+      // Shift the final consent step number
+      stepNum.textContent = showAny ? '6' : '5';
+    }
+
+    // ── Point 2: Handle privacy dropdown changes
+    function handlePrivacyChange() {
+      var brandedContent = document.getElementById('cb-branded-content').checked;
+      var privacySelect  = document.getElementById('privacy-status');
+      var bpWarning      = document.getElementById('branded-privacy-warning');
+
+      if (brandedContent && privacySelect.value === 'SELF_ONLY') {
+        privacySelect.value = '';
+        bpWarning.classList.add('visible');
+      } else {
+        bpWarning.classList.remove('visible');
+      }
+      updateSubmitState();
+    }
+
+    // ── Enable submit only when all required fields are valid
+    function updateSubmitState() {
+      var title          = document.getElementById('post-title').value.trim();
+      var privacy        = document.getElementById('privacy-status').value;
+      var consent        = document.getElementById('consent-check').checked;
+      var disclosureOn   = document.getElementById('disclosure-toggle').checked;
+      var yourBrand      = document.getElementById('cb-your-brand').checked;
+      var brandedContent = document.getElementById('cb-branded-content').checked;
+
+      // Point 3: if disclosure is on, at least one checkbox must be checked
+      var disclosureValid = !disclosureOn || yourBrand || brandedContent;
+
+      // Point 3: Branded Content cannot use "Only Me"
+      var privacyValid = !(brandedContent && privacy === 'SELF_ONLY');
+
+      var canSubmit = title.length > 0 && privacy !== '' && consent && disclosureValid && privacyValid;
+      document.getElementById('submit-btn').disabled = !canSubmit;
+    }
+
+    // ── Point 5: Explicit submit — update button text safely via textContent
+    function handleSubmit() {
+      var btn   = document.getElementById('submit-btn');
+      var label = document.getElementById('submit-label');
+      btn.disabled = true;
+      label.textContent = 'Posting to TikTok\u2026';
+
+      // In production: call the TikTok Content Posting API,
+      // then poll the status endpoint or handle the upload webhook.
+      setTimeout(function() {
+        label.textContent = 'Posted! Processing on TikTok\u2026';
+        btn.style.background = '#22c55e';
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>
