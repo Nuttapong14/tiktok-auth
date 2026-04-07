@@ -523,35 +523,11 @@
     </div>
 
     <!-- ══════════════════════════════════════════
-         POINT 5 (preview first): CONTENT PREVIEW
-    ══════════════════════════════════════════ -->
-    <div class="step-card">
-      <div class="step-header">
-        <div class="step-num">2</div>
-        <div>
-          <div class="step-title">Content Preview</div>
-          <div class="step-subtitle">Review your content before setting post details</div>
-        </div>
-      </div>
-
-      <div class="preview-box">
-        <div class="preview-media">
-          <div class="media-icon">&#x1F4F9;</div>
-          <p>Your selected video or photo will appear here</p>
-        </div>
-        <div class="preview-label">
-          <span class="dot"></span>
-          Preview is shown as-is. No promotional watermarks or overlays will be added.
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════
          POINT 2: REQUIRED METADATA FIELDS
     ══════════════════════════════════════════ -->
     <div class="step-card">
       <div class="step-header">
-        <div class="step-num">3</div>
+        <div class="step-num">2</div>
         <div>
           <div class="step-title">Post Details</div>
           <div class="step-subtitle">Title, privacy, and interaction settings</div>
@@ -647,7 +623,7 @@
     ══════════════════════════════════════════ -->
     <div class="step-card">
       <div class="step-header">
-        <div class="step-num">4</div>
+        <div class="step-num">3</div>
         <div>
           <div class="step-title">Disclose Commercial Content</div>
           <div class="step-subtitle">Required by TikTok for promotional or sponsored content</div>
@@ -713,7 +689,7 @@
     ══════════════════════════════════════════ -->
     <div class="step-card" id="compliance-card" style="display:none">
       <div class="step-header">
-        <div class="step-num">5</div>
+        <div class="step-num">4</div>
         <div>
           <div class="step-title">Policy Agreements</div>
           <div class="step-subtitle">Required acknowledgements based on your disclosure settings</div>
@@ -750,14 +726,26 @@
     </div>
 
     <!-- ══════════════════════════════════════════
-         POINT 5: EXPLICIT CONSENT + SUBMIT
+         POINT 5: PREVIEW + EXPLICIT CONSENT + SUBMIT
     ══════════════════════════════════════════ -->
     <div class="step-card">
       <div class="step-header">
-        <div class="step-num" id="consent-step-num">5</div>
+        <div class="step-num">5</div>
         <div>
           <div class="step-title">Review &amp; Post</div>
-          <div class="step-subtitle">Confirm your consent before sending to TikTok</div>
+          <div class="step-subtitle">Preview your content and confirm before sending to TikTok</div>
+        </div>
+      </div>
+
+      <!-- Point 5: Content preview displayed before consent/submit -->
+      <div class="preview-box" style="margin-bottom:1.25rem">
+        <div class="preview-media">
+          <div class="media-icon">&#x1F4F9;</div>
+          <p>Your selected video or photo will appear here</p>
+        </div>
+        <div class="preview-label">
+          <span class="dot"></span>
+          Preview is shown as-is. No promotional watermarks or overlays will be added.
         </div>
       </div>
 
@@ -860,18 +848,13 @@
 
     // ── Point 4: Show/hide compliance items based on which disclosures are active
     function updateComplianceSection(yourBrand, brandedContent) {
-      var card     = document.getElementById('compliance-card');
-      var ciMusic  = document.getElementById('ci-music');
+      var card      = document.getElementById('compliance-card');
+      var ciMusic   = document.getElementById('ci-music');
       var ciBranded = document.getElementById('ci-branded');
-      var stepNum  = document.getElementById('consent-step-num');
 
-      var showAny = yourBrand || brandedContent;
-      card.style.display = showAny ? 'block' : 'none';
+      card.style.display = (yourBrand || brandedContent) ? 'block' : 'none';
       ciMusic.classList.toggle('visible', yourBrand);
       ciBranded.classList.toggle('visible', brandedContent);
-
-      // Shift the final consent step number
-      stepNum.textContent = showAny ? '6' : '5';
     }
 
     // ── Point 2: Handle privacy dropdown changes
